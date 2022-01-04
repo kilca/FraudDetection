@@ -50,7 +50,8 @@ import numpy as np
 import random
 from scipy import sparse
 from sklearn.utils import shuffle
-from fraudar.export.MinTree import MinTree
+#from fraudar.export.MinTree import MinTree
+from MinTree import MinTree
 import sys
 
 from logging import getLogger

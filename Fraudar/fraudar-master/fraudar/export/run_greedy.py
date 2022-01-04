@@ -25,7 +25,7 @@ start_time = time.time()
 from greedy import *
 import sys
 M = readData(sys.argv[1])
-print "finished reading data: shape = ", M.shape, " @ ", time.time() - start_time
+print("finished reading data: shape = ", M.shape, " @ ", time.time() - start_time)
 
 # (m, n) = (500, 500)
 # M = M[0:m, 0:n]
@@ -42,10 +42,10 @@ print "finished reading data: shape = ", M.shape, " @ ", time.time() - start_tim
 # pickle.dump(M, open(subset_filepath, "wb"))
 # np.savetxt(subset_filepath, M.nonzero().transpose(), fmt='%i')
 
-print "finished writing data", " @ ", time.time() - start_time
+print("finished writing data", " @ ", time.time() - start_time)
 lwRes = logWeightedAveDegree(M)
-print lwRes
+print(lwRes)
 np.savetxt("%s.rows" % (sys.argv[2], ), np.array(list(lwRes[0][0])), fmt='%d')
 np.savetxt("%s.cols" % (sys.argv[2], ), np.array(list(lwRes[0][1])), fmt='%d')
-print "score obtained is ", lwRes[1]
-print "done @ ", time.time() - start_time
+print("score obtained is ", lwRes[1])
+print("done @ ", time.time() - start_time)
