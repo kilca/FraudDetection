@@ -87,7 +87,46 @@ def runFbox(tau, k,file):
     return suspicious_users, suspicious_products
 
 def runLinear(file):
-    return
+    from docplex.mp.model import Model
+    from docplex.mp.environment import Environment
+    import numpy as np
+    from random import randrange
+
+    xdata = {}
+    maxCount = 100
+    count = 0
+    with open(file,'r') as file:
+        for line in file:
+            count = count +1
+            if (count > maxCount):
+                break
+            a,b = line.split(" ")
+            try:
+                xdata[(int(a),int(b))] = randrange(5)
+            except Exception as e:
+                print(e)
+    max = -1
+    for (a,b) in xdata:
+        if (a > max):
+            max = a
+        if (b > max):
+            max = b
+    ydata = [e for e in range(0,max+1)]
+    vals = xdata
+    valsy = ydata
+    m = Model(name='FraudGraph')
+    x = m.continuous_var_dict(vals,lb=0,name='x')
+    y = m.continuous_var_list(valsy,lb=0, name='y')  #,key_format=lambda i: "x_%d" %(i[0]))
+    c1 = m.add_constraints(x[(i,j)] <=y[i] for (i,j) in x)
+    c2 = m.add_constraints(x[(i,j)] <=y[j] for (i,j) in x)
+    c3 = m.add_constraint( np.sum(y) <= 1)
+    m.maximize( m.sum(x[(i,j)] for (i,j) in x))
+    #m.print_information()
+    m.solve()
+    retour = []
+    for v in m.iter_integer_vars():
+        retour.append(str(v)+" = "+str(v.solution_value))
+    return retour
 
 def runFraudar(file):
     M = readData(file)

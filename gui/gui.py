@@ -165,7 +165,9 @@ class Toplevel1:
             for o in output:
                 self.TextOutput.insert(tk.END,str(o)+"\n")
         elif(algo == "Linear"):
-            a = runLinear(data)
+            output = runLinear(data)
+            for o in output:
+                self.TextOutput.insert(tk.END,str(o)+"\n")
 
     def insert(self, vals):
         for v in vals:
