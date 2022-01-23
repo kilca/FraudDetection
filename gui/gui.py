@@ -2,8 +2,10 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.constants import *
+from algo import *
 
 class Toplevel1:
+
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -47,13 +49,14 @@ class Toplevel1:
         self.Label1.configure(foreground="#000000")
         self.Label1.configure(text='''Values''')
 
-        self.ListVals = tk.Listbox(self.Frame1)
+        self.ListVals = tk.Listbox(self.Frame1, exportselection=0)
         self.ListVals.place(relx=0.082, rely=0.195, relheight=0.693
                 , relwidth=0.751)
         self.ListVals.configure(background="white")
         self.ListVals.configure(disabledforeground="#a3a3a3")
         self.ListVals.configure(font="TkFixedFont")
         self.ListVals.configure(foreground="#000000")
+        self.ListVals.insert("end","data/exampleIn.txt")
 
         self.TFrame1 = ttk.Frame(self.top)
         self.TFrame1.place(relx=0.43, rely=0.044, relheight=0.456, relwidth=0.47)
@@ -62,13 +65,16 @@ class Toplevel1:
         self.TFrame1.configure(borderwidth="2")
         self.TFrame1.configure(relief="groove")
 
-        self.ListAlgo = tk.Listbox(self.TFrame1)
+        self.ListAlgo = tk.Listbox(self.TFrame1, exportselection=0)
         self.ListAlgo.place(relx=0.102, rely=0.195, relheight=0.693
                 , relwidth=0.793)
         self.ListAlgo.configure(background="white")
         self.ListAlgo.configure(disabledforeground="#a3a3a3")
         self.ListAlgo.configure(font="TkFixedFont")
         self.ListAlgo.configure(foreground="#000000")
+        self.ListAlgo.insert("end","Fbox")
+        self.ListAlgo.insert("end","Fraudar")
+        self.ListAlgo.insert("end","Linear")
 
         self.Label2 = tk.Label(self.TFrame1)
         self.Label2.place(relx=0.102, rely=0.0, height=21, width=34)
@@ -121,7 +127,7 @@ class Toplevel1:
         self.BtnExport.configure(pady="0")
         self.BtnExport.configure(text='''Export''')
 
-        self.BtnEstimate = tk.Button(self.top)
+        self.BtnEstimate = tk.Button(self.top, command=self.estimateClick)
         self.BtnEstimate.place(relx=0.908, rely=0.244, height=24, width=47)
         self.BtnEstimate.configure(activebackground="#ececec")
         self.BtnEstimate.configure(activeforeground="#000000")
@@ -133,6 +139,38 @@ class Toplevel1:
         self.BtnEstimate.configure(highlightcolor="black")
         self.BtnEstimate.configure(pady="0")
         self.BtnEstimate.configure(text='''Estimate''')
+
+    def estimateClick(self):
+        print('click estimate')
+        algo = ""
+        for i in self.ListAlgo.curselection():
+            algo = self.ListAlgo.get(i)
+        data = ""
+        for i in self.ListVals.curselection():
+            data = self.ListVals.get(i)
+        self.TextOutput.delete(1.0,END)#clear
+        if (algo == "" or data == ""):
+            self.TextOutput.insert(tk.END, "Please choose values and algo")
+            return
+        print('valid values')
+        if (algo == "Fbox"):
+            print('choose fbox')
+            sus_users, sus_prod = runFbox(20,50,data)
+            self.TextOutput.insert(tk.END,"suspicious users : "+str(len(sus_users))+"\n")
+            self.insert(sus_users)
+            self.TextOutput.insert(tk.END,"suspicious products : "+str(len(sus_prod))+"\n")
+            self.insert(sus_prod)
+        elif(algo == "Fraudar"):
+            output = runFraudar(data)
+            for o in output:
+                self.TextOutput.insert(tk.END,str(o)+"\n")
+        elif(algo == "Linear"):
+            a = runLinear(data)
+
+    def insert(self, vals):
+        for v in vals:
+            self.TextOutput.insert(tk.END,str(v)+"\n")
+        
 
 def start_up():
     root = tk.Tk()
