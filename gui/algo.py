@@ -123,9 +123,7 @@ def runLinear(file):
     m.maximize( m.sum(x[(i,j)] for (i,j) in x))
     #m.print_information()
     m.solve()
-    retour = []
-    for v in m.iter_integer_vars():
-        retour.append(str(v)+" = "+str(v.solution_value))
+    retour = str(m.solution).split('\n')
     return retour
 
 def runFraudar(file):
