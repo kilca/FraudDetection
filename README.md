@@ -6,3 +6,4 @@ Some fraud detection algorithms from papers using Stochastic programming
 - data_out : data in correct format
 - FBox : Jupyter using FBox Algorithm
 - Fraudar : Jupyter using Fraudar Algorithm
+- Q3 : Jupyter implementing the linear programming method
