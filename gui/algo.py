@@ -116,12 +116,11 @@ def runLinear(file):
     valsy = ydata
     m = Model(name='FraudGraph')
     x = m.continuous_var_dict(vals,lb=0,name='x')
-    y = m.continuous_var_list(valsy,lb=0, name='y')  #,key_format=lambda i: "x_%d" %(i[0]))
+    y = m.continuous_var_list(valsy,lb=0, name='y')
     c1 = m.add_constraints(x[(i,j)] <=y[i] for (i,j) in x)
     c2 = m.add_constraints(x[(i,j)] <=y[j] for (i,j) in x)
     c3 = m.add_constraint( np.sum(y) <= 1)
     m.maximize( m.sum(x[(i,j)] for (i,j) in x))
-    #m.print_information()
     m.solve()
     retour = str(m.solution).split('\n')
     return retour
@@ -133,7 +132,5 @@ def runFraudar(file):
     retour.append("finished writing data")
     lwRes = logWeightedAveDegree(M)
     retour.append(lwRes)
-    #np.savetxt("%s.rows" % (sys.argv[2], ), np.array(list(lwRes[0][0])), fmt='%d')
-    #np.savetxt("%s.cols" % (sys.argv[2], ), np.array(list(lwRes[0][1])), fmt='%d')
     retour.append("score obtained is "+ str(lwRes[1]))
     return retour
